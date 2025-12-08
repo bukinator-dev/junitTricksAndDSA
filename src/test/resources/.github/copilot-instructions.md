@@ -1,0 +1,1 @@
+Use resources/my_prompts.prompt from this project directory to enrich and enhance the context for answering your questions.
