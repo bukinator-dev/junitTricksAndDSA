@@ -1,8 +1,7 @@
+package leetCodeSolutionsTests;
+
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static java.util.Collections.rotate;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 public class rotateArray {
