@@ -1,11 +1,25 @@
 package org.example;
 
+import java.util.HashMap;
+import java.util.Map;
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
+    static void primitiveParam(int x) {
+        x = 10;
+    }
+    static void putToMap(Map<String,String> map){
+        map.put("key1","value1");
+    }
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
+        int x = 5;
+        primitiveParam(x);
+        Map<String,String> myMap = new HashMap<>();
+        putToMap(myMap);
+
+        System.out.println("Map contents: " + myMap);
+        System.out.println("x = " + x);
         System.out.printf("Hello and welcome!");
 
         int[] exampleArray = {1, 2, 3, 4, 5};
