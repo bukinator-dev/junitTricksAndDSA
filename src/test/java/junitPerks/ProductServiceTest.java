@@ -1,8 +1,12 @@
 package junitPerks;
 
+import forJunitInTesting.exceptions.ProductServiceException;
+import forJunitInTesting.service.ProductService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @Order(2)
 public class ProductServiceTest {
@@ -13,5 +17,17 @@ public class ProductServiceTest {
 
     @Test
     void testCreateProduct_whenProductTitleIsMissing_throwsProductServiceException() {
+        //Arrange
+        ProductService productService = new ProductService("");
+        //Act
+        assertThrows(ProductServiceException.class,() -> {
+           productService.getProductTitle();
+        });
+
+        ProductServiceException exceptionMessage = assertThrows(ProductServiceException.class,() -> {
+            productService.getProductTitle();
+        });
+
+        assertEquals(exceptionMessage.toString(),"forJunitInTesting.exceptions.ProductServiceException: Product title is missing");
     }
 }
