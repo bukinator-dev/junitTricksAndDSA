@@ -30,4 +30,15 @@ public class ProductServiceTest {
 
         assertEquals(exceptionMessage.toString(),"forJunitInTesting.exceptions.ProductServiceException: Product title is missing");
     }
+
+    @Test
+    void testCreateProduct_whenProvidedWithValidTitle_returnsTitle() {
+        //Arrange
+        ProductService productService = new ProductService("Laptop");
+        //Act
+        String productTitle = productService.getProductTitle();
+        //Assert
+        assertNotNull(productTitle);
+        assertEquals("Laptop",productTitle);
+    }
 }
