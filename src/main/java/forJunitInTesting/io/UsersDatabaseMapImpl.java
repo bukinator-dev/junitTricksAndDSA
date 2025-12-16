@@ -1,5 +1,7 @@
 package forJunitInTesting.io;
 
+import forJunitInTesting.model.UserRecord;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +22,10 @@ public class UsersDatabaseMapImpl implements UsersDatabase {
     @Override
     public Map save(String userId, Map userDetails) {
         return users.put(userId, userDetails);
+    }
+
+    public Map save(UserRecord user) {
+        return users.put(user.userId(), user.toMap());
     }
 
     @Override

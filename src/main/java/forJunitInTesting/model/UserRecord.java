@@ -17,4 +17,12 @@ public record UserRecord(String userId, String firstName, String lastName) {
                 Objects.requireNonNull(map.get("lastName"), "map.lastName")
         );
     }
+
+    public Map<String, String> toMap() {
+        return Map.of(
+                "userId", userId,
+                "firstName", firstName,
+                "lastName", lastName
+        );
+    }
 }

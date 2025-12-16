@@ -3,9 +3,15 @@ package junitPerks;
 import com.google.common.collect.MutableClassToInstanceMap;
 import forJunitInTesting.io.UsersDatabase;
 import forJunitInTesting.io.UsersDatabaseMapImpl;
+import forJunitInTesting.model.UserRecord;
 import forJunitInTesting.service.UserService;
 import forJunitInTesting.service.UserServiceImpl;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,16 +19,12 @@ import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
-    private static final Logger log = Logger.getLogger(UserServiceImplTest.class.getName());
-
-    StringBuilder output = new StringBuilder();
-    UsersDatabase userDatabase;
-    UserService userService;
-    String createdUserId;
     /*
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     Executed method instance is : 123 - this is accumulative
@@ -33,10 +35,26 @@ public class UserServiceImplTest {
     this is for each separate method, however, beforeAll and AfterAll in this case must be static
      */
 
+    private static final Logger log = Logger.getLogger(UserServiceImplTest.class.getName());
+    @Mock
+    UsersDatabase userRepositoryMock;
+
+    @InjectMocks
+    UserServiceImpl userServiceMock; // in other words, what is being tested, with mocked dependencies like userRepositoryMock
+
+    StringBuilder output = new StringBuilder();
+    UsersDatabase userDatabase;
+    UserService userService;
+    String createdUserId;
 
     @AfterEach
-    void printMethodInstance(){
-        System.out.println("Executed method instance is : " + output);
+    void printMethodInstance(TestInfo testInfo){
+        log.info("Executed method instance is : " + output);
+        log.info("---");
+        log.info("Test executed: " + testInfo.getDisplayName());
+        log.info("Method: " + testInfo.getTestMethod().orElse(null));
+        log.info("Class: " + testInfo.getTestClass().orElse(null));
+        log.info("Tags: " + testInfo.getTags());
     }
 
     @BeforeAll
@@ -47,11 +65,31 @@ public class UserServiceImplTest {
         userService = new UserServiceImpl(userDatabase);
     }
 
+
+
     @AfterAll
     void cleanup() {
         // Close connection
         // Delete database
         userDatabase.close();
+    }
+
+    @Test
+
+    @DisplayName("Save user works")
+    void testSaveUser_whenProvidedWithValidNames_returnsTrue() {
+        output.append(5);
+        //1st Arrange
+//        Mockito.when(userRepositoryMock.save("1", Map.of("firstName", "Alice", "lastName", "Wonderland")))
+//                .thenReturn(Map.of("userId", "1", "firstName", "Alice", "lastName", "Wonderland"));
+        //2nd Arrange
+        Mockito.when(userRepositoryMock.save(any(UserRecord.class))).thenReturn(new UserRecord("2", "Bob", "Builder").toMap());
+        //Act
+//        Boolean result1 = userServiceMock.saveUser("Alice", "Wonderland");
+        Boolean result2 = userServiceMock.saveUser("Bob", "Builder");
+        //Assert
+//        assertEquals(true, result1, "Saving Alice should return true");
+        assertEquals(true, result2, "Saving Bob should return true");
     }
 
     @Test
@@ -112,5 +150,7 @@ public class UserServiceImplTest {
         //Assert
         assertEquals(null, userDetails, "User details should be null after deletion");
     }
+
+
 
 }

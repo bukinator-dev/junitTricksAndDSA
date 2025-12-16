@@ -3,6 +3,7 @@ package forJunitInTesting.service;
 
 
 import forJunitInTesting.io.UsersDatabase;
+import forJunitInTesting.model.UserRecord;
 
 import java.util.Map;
 import java.util.UUID;
@@ -13,6 +14,18 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl(UsersDatabase usersDatabase) {
         this.usersDatabase = usersDatabase;
+    }
+
+    @Override
+    public Boolean saveUser(String firstName, String lastName) {
+        String userId = UUID.randomUUID().toString();
+        UserRecord newUser = new UserRecord(userId, firstName, lastName);
+        usersDatabase.save(newUser);
+        if(usersDatabase.find(newUser.userId())==null) {
+            return false;
+        } else{
+            return true;
+        }
     }
 
     @Override
@@ -46,4 +59,5 @@ public class UserServiceImpl implements UserService {
 
         usersDatabase.delete(userId);
     }
+
 }

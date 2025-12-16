@@ -19,6 +19,7 @@ repositories {
 
 dependencies {
 
+    testImplementation("org.mockito:mockito-junit-jupiter:4.11.0")
     implementation("io.grpc:grpc-netty-shaded:1.56.0")
     implementation("io.grpc:grpc-protobuf:1.56.0")
     implementation("javax.annotation:javax.annotation-api:1.3.2")
