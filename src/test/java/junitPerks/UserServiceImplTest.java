@@ -79,16 +79,13 @@ public class UserServiceImplTest {
     @DisplayName("Save user works")
     void testSaveUser_whenProvidedWithValidNames_returnsTrue() {
         output.append(5);
-        //1st Arrange
-//        Mockito.when(userRepositoryMock.save("1", Map.of("firstName", "Alice", "lastName", "Wonderland")))
-//                .thenReturn(Map.of("userId", "1", "firstName", "Alice", "lastName", "Wonderland"));
-        //2nd Arrange
+        //Arrange
         Mockito.when(userRepositoryMock.save(any(UserRecord.class))).thenReturn(new UserRecord("2", "Bob", "Builder").toMap());
         //Act
-//        Boolean result1 = userServiceMock.saveUser("Alice", "Wonderland");
+
         Boolean result2 = userServiceMock.saveUser("Bob", "Builder");
         //Assert
-//        assertEquals(true, result1, "Saving Alice should return true");
+
         assertEquals(true, result2, "Saving Bob should return true");
     }
 

@@ -7,6 +7,14 @@ import java.util.List;
 
 public class addTwoListsTest {
     @Test
+    void checkString(){
+        String a = "a";
+        String b = "a";
+        String b2 = new String("a");
+        System.out.println(a==b);
+        System.out.println(a==b2);
+    }
+    @Test
     void SumTask(){
         // List 1: 2 -> 4 -> 3 (represents the number 342)
         // List 2: 5 -> 6 -> 4 (represents the number 465)
