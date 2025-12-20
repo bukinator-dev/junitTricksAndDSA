@@ -26,13 +26,13 @@ public class TwoPointers {
 
     //Two Sum II - Input Array unsorted.
     public int[] twoSum(int[] numbers, int target) {
-        int[][] originalLocations = new int[numbers.length][2];
+         int[][] originalLocations = new int[numbers.length][2];
         for(int i=0; i<numbers.length;i++){
             originalLocations[i][0] = i; // Store original index
             originalLocations[i][1] = numbers[i];
         }
         Arrays.sort(originalLocations, (a,b) -> Integer.compare(a[1], b[1])); // Sort by values
-        System.out.println("Sorted numbers: " +numbers);
+        System.out.println(Arrays.deepToString(originalLocations));
         int left = 0;
         int right = numbers.length - 1;
         while (left < right) {
