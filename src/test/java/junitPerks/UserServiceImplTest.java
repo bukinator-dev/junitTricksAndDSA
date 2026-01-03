@@ -1,9 +1,12 @@
 package junitPerks;
 
 import com.google.common.collect.MutableClassToInstanceMap;
+import forJunitInTesting.data.UsersRepository;
+import forJunitInTesting.data.UsersRepositoryImpl;
 import forJunitInTesting.io.UsersDatabase;
 import forJunitInTesting.io.UsersDatabaseMapImpl;
 import forJunitInTesting.model.UserRecord;
+import forJunitInTesting.service.EmailVerificationService;
 import forJunitInTesting.service.UserService;
 import forJunitInTesting.service.UserServiceImpl;
 import org.junit.jupiter.api.*;
@@ -39,6 +42,9 @@ public class UserServiceImplTest {
     @Mock
     UsersDatabase userRepositoryMock;
 
+    @Mock
+    EmailVerificationService emailVerificationService;
+
     @InjectMocks
     UserServiceImpl userServiceMock; // in other words, what is being tested, with mocked dependencies like userRepositoryMock
 
@@ -46,6 +52,7 @@ public class UserServiceImplTest {
     UsersDatabase userDatabase;
     UserService userService;
     String createdUserId;
+
 
     @AfterEach
     void printMethodInstance(TestInfo testInfo){
@@ -61,8 +68,9 @@ public class UserServiceImplTest {
     void setup() {
         // Create & initialize database
         userDatabase = new UsersDatabaseMapImpl();
+        UsersRepository userRepository = new UsersRepositoryImpl();
         userDatabase.init();
-        userService = new UserServiceImpl(userDatabase);
+        userService = new UserServiceImpl(userRepository, emailVerificationService);
     }
 
 
@@ -75,7 +83,6 @@ public class UserServiceImplTest {
     }
 
     @Test
-
     @DisplayName("Save user works")
     void testSaveUser_whenProvidedWithValidNames_returnsTrue() {
         output.append(5);

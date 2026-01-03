@@ -1,63 +1,63 @@
 package forJunitInTesting.service;
 
 
+import forJunitInTesting.data.UsersRepository;
+import forJunitInTesting.model.User;
 
-import forJunitInTesting.io.UsersDatabase;
-import forJunitInTesting.model.UserRecord;
-
-import java.util.Map;
 import java.util.UUID;
 
 public class UserServiceImpl implements UserService {
 
-    UsersDatabase usersDatabase;
+    UsersRepository usersRepository;
+    EmailVerificationService emailVerificationService;
 
-    public UserServiceImpl(UsersDatabase usersDatabase) {
-        this.usersDatabase = usersDatabase;
+    public UserServiceImpl(UsersRepository usersRepository,
+                           EmailVerificationService emailVerificationService) {
+        this.usersRepository = usersRepository;
+        this.emailVerificationService = emailVerificationService;
     }
 
     @Override
-    public Boolean saveUser(String firstName, String lastName) {
-        String userId = UUID.randomUUID().toString();
-        UserRecord newUser = new UserRecord(userId, firstName, lastName);
-        usersDatabase.save(newUser);
-        if(usersDatabase.find(newUser.userId())==null) {
-            return false;
-        } else{
-            return true;
+    public User createUser(String firstName,
+                           String lastName,
+                           String email,
+                           String password,
+                           String repeatPassword) {
+
+        if(firstName == null || firstName.trim().length() == 0) {
+            throw new IllegalArgumentException("User's first name is empty");
         }
+
+        if(lastName == null || lastName.trim().length() == 0) {
+            throw new IllegalArgumentException("User's last name is empty");
+        }
+        User user = new User(firstName, lastName, email, UUID.randomUUID().toString());
+
+        boolean isUserCreated;
+
+        try {
+            isUserCreated = usersRepository.save(user);
+        } catch (RuntimeException ex) {
+            throw new UserServiceException(ex.getMessage());
+        }
+
+        if(!isUserCreated) throw new UserServiceException("Could not create user");
+
+        try {
+            emailVerificationService.scheduleEmailConfirmation(user);
+        } catch(RuntimeException ex) {
+            throw new UserServiceException(ex.getMessage());
+        }
+
+        return user;
+
     }
 
-    @Override
-    public String createUser(Map userDetails) {
-        String userId = UUID.randomUUID().toString();
-        userDetails.put("userId", userId);
-        usersDatabase.save(userId, userDetails);
-        return userId;
+    public void demoMethod() {
+        System.out.println("Demo method");
     }
 
-    @Override
-    public Map updateUser(String userId, Map userDetails) {
-        Map existingUser = usersDatabase.find(userId);
-        if(existingUser == null) throw new IllegalArgumentException("User not found");
-
-        existingUser.put("firstName", userDetails.get("firstName"));
-        existingUser.put("lastName", userDetails.get("lastName"));
-
-        return usersDatabase.update(userId, existingUser);
+    public Boolean saveUser(String bob, String builder) {
+        return usersRepository.save(new User(bob,builder,"demoEmail", "demoId"));
     }
-
-    @Override
-    public Map getUserDetails(String userId) {
-        return usersDatabase.find(userId);
-    }
-
-    @Override
-    public void deleteUser(String userId) {
-        Map existingUser = usersDatabase.find(userId);
-        if(existingUser == null) throw new IllegalArgumentException("User not found");
-
-        usersDatabase.delete(userId);
-    }
-
 }
